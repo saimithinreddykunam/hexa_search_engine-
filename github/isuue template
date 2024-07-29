@@ -1,0 +1,111 @@
+import java.util.List;
+import java.util.ArrayList;
+
+class IssueTemplate {
+    String name;
+    String description;
+    String title;
+    List<String> labels;
+    List<BodyElement> body;
+
+    public IssueTemplate() {
+        labels = new ArrayList<>();
+        body = new ArrayList<>();
+    }
+}
+
+class BodyElement {
+    String type;
+    Attributes attributes;
+    Validations validations;
+
+    public BodyElement(String type, Attributes attributes, Validations validations) {
+        this.type = type;
+        this.attributes = attributes;
+        this.validations = validations;
+    }
+}
+
+class Attributes {
+    String label;
+    String description;
+    List<String> options;
+    boolean required;
+    String placeholder;
+    String value;
+    String render;
+
+    public Attributes(String label, String description) {
+        this.label = label;
+        this.description = description;
+        this.options = new ArrayList<>();
+    }
+}
+
+class Validations {
+    boolean required;
+
+    public Validations(boolean required) {
+        this.required = required;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        IssueTemplate template = new IssueTemplate();
+        template.name = "HEXA";
+        template.description = "File a bug/issue";
+        template.title = "[HEXA] <title>";
+        template.labels.add("HEXA");
+        template.labels.add("Needs Triage");
+
+        Attributes checkBoxAttributes = new Attributes(
+            "Is there an existing issue for this?",
+            "Please search to see if an issue already exists for the bug you encountered."
+        );
+        checkBoxAttributes.options.add("I have searched the existing issues");
+        checkBoxAttributes.required = true;
+        Validations checkBoxValidations = new Validations(true);
+        template.body.add(new BodyElement("checkboxes", checkBoxAttributes, checkBoxValidations));
+
+        Attributes currentBehaviorAttributes = new Attributes(
+            "Current Behavior",
+            "A concise description of what you're experiencing."
+        );
+        Validations currentBehaviorValidations = new Validations(true);
+        template.body.add(new BodyElement("textarea", currentBehaviorAttributes, currentBehaviorValidations));
+
+        Attributes expectedBehaviorAttributes = new Attributes(
+            "Expected Behavior",
+            "A concise description of what you expected to happen."
+        );
+        Validations expectedBehaviorValidations = new Validations(true);
+        template.body.add(new BodyElement("textarea", expectedBehaviorAttributes, expectedBehaviorValidations));
+
+        Attributes stepsToReproduceAttributes = new Attributes(
+            "Steps To Reproduce",
+            "Steps to reproduce the behavior."
+        );
+        stepsToReproduceAttributes.placeholder = "1. In this environment...\n2. With this config...\n3. Run '...'\n4. See error...";
+        Validations stepsToReproduceValidations = new Validations(true);
+        template.body.add(new BodyElement("textarea", stepsToReproduceAttributes, stepsToReproduceValidations));
+
+        Attributes environmentAttributes = new Attributes(
+            "Environment",
+            "examples:\n- Browser: Chrome 52.0.2743.116"
+        );
+        environmentAttributes.value = "- OS:\n- Browser:";
+        environmentAttributes.render = "markdown";
+        Validations environmentValidations = new Validations(true);
+        template.body.add(new BodyElement("textarea", environmentAttributes, environmentValidations));
+
+        Attributes anythingElseAttributes = new Attributes(
+            "Anything else?",
+            "Links? References? Anything that will give us more context about the issue you are encountering!\n\nTip: You can attach images or log files by clicking this area to highlight it and then dragging files in."
+        );
+        Validations anythingElseValidations = new Validations(false);
+        template.body.add(new BodyElement("textarea", anythingElseAttributes, anythingElseValidations));
+
+        // Print or process the template object as needed
+    }
+}
